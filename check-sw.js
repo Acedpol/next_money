@@ -1,36 +1,45 @@
 #!/usr/bin/env node
+import fs from "fs";
+import path from "path";
+import {
+  printHeader,
+  printFooter,
+  logInfo,
+  logSuccess,
+  logWarn,
+  logError,
+} from "./utils/check-style.js";
 
-/**
- * check-sw.js
- * Comprueba que el Service Worker se haya generado correctamente tras el build.
- */
+const root = process.cwd();
+let allGood = true;
 
-const fs = require("fs");
-const path = require("path");
-const chalk = require("chalk");
+printHeader("Verificación del Service Worker");
 
-const swPath = path.join(__dirname, "public", "sw.js");
+const swPath = path.join(root, "public", "sw.js");
 
-console.log(chalk.cyan("\n🔍 Verificando Service Worker (sw.js)...\n"));
+if (fs.existsSync(swPath)) {
+  const content = fs.readFileSync(swPath, "utf-8");
+  logSuccess("Service Worker (sw.js) encontrado.");
 
-if (!fs.existsSync(swPath)) {
-  console.error(chalk.red("❌ No se encontró public/sw.js después del build."));
-  console.error(
-    chalk.yellow("ℹ️  Asegúrate de que next-pwa esté configurado con dest: 'public' y build terminado correctamente.")
-  );
-  process.exit(1);
+  if (/self\.addEventListener/.test(content)) {
+    logSuccess("Service Worker contiene listeners de eventos (install, fetch, etc.).");
+  } else {
+    logWarn("Service Worker encontrado pero sin listeners de eventos.");
+    allGood = false;
+  }
+
+  if (/cache/i.test(content)) {
+    logSuccess("Service Worker maneja caché (modo offline activo).");
+  } else {
+    logWarn("No se detecta manejo de caché en el Service Worker.");
+  }
+} else {
+  logError("No se encontró el archivo public/sw.js.");
+  allGood = false;
 }
 
-const stats = fs.statSync(swPath);
-if (stats.size < 1000) {
-  console.error(
-    chalk.red(`❌ El archivo sw.js parece vacío o incompleto (${stats.size} bytes).`)
-  );
-  console.error(
-    chalk.yellow("ℹ️  Es posible que next-pwa no haya podido generar el Service Worker.")
-  );
-  process.exit(1);
-}
-
-console.log(chalk.green(`✅ Service Worker verificado correctamente (${(stats.size / 1024).toFixed(1)} KB).`));
-console.log(chalk.green("✅ PWA lista para modo offline y despliegue.\n"));
+printFooter(
+  allGood,
+  "Service Worker verificado correctamente. Todo listo para modo offline.",
+  "El Service Worker presenta errores o no se encuentra. Revisa antes del build."
+);

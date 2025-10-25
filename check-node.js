@@ -1,26 +1,45 @@
 #!/usr/bin/env node
+import { execSync } from "child_process";
+import semver from "semver";
+import {
+  printHeader,
+  printFooter,
+  logInfo,
+  logSuccess,
+  logWarn,
+  logError,
+} from "./utils/check-style.js";
 
-// const semver = require("semver");
+let allGood = true;
 
-let semver;
+printHeader("Verificación del entorno Node.js");
+
 try {
-  semver = require("semver");
-} catch {
-  console.error("⚠️  Falta el paquete 'semver'. Ejecuta: npm install --save-dev semver");
-  process.exit(1);
+  const nodeVersion = execSync("node -v").toString().trim();
+  const npmVersion = execSync("npm -v").toString().trim();
+
+  logInfo(`Versión de Node.js detectada: ${nodeVersion}`);
+  logInfo(`Versión de npm detectada: ${npmVersion}`);
+
+  if (semver.gte(nodeVersion, "18.18.0")) {
+    logSuccess("Node.js cumple con la versión mínima recomendada (>= 18.18.0).");
+  } else {
+    logError("Node.js no cumple con la versión mínima requerida (>= 18.18.0).");
+    allGood = false;
+  }
+
+  if (semver.gte(npmVersion, "9.0.0")) {
+    logSuccess("npm cumple con la versión mínima recomendada (>= 9.0.0).");
+  } else {
+    logWarn("npm está por debajo de la versión recomendada (>= 9.0.0). Se recomienda actualizar.");
+  }
+} catch (err) {
+  logError(`Error al verificar versiones: ${err.message}`);
+  allGood = false;
 }
 
-const { engines } = require("./package.json");
-
-// Versión mínima recomendada para Next.js 16
-const requiredVersion = engines?.node || ">=18.18.0";
-
-if (!semver.satisfies(process.version, requiredVersion)) {
-  console.error(
-    `\x1b[31m⚠️  Node.js ${process.version} no cumple con la versión mínima requerida (${requiredVersion}).\x1b[0m`
-  );
-  console.error("➡️  Actualiza Node.js antes de continuar.\n");
-  process.exit(1);
-} else {
-  console.log(`✅ Node.js ${process.version} es compatible (${requiredVersion}).`);
-}
+printFooter(
+  allGood,
+  "Verificación del entorno Node.js completada correctamente. ¡Listo para continuar!",
+  "Se detectaron errores en el entorno Node.js. Revisa los puntos anteriores."
+);
