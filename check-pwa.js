@@ -20,7 +20,7 @@ const checkFile = (filePath, desc) => {
     logSuccess(`${desc} encontrado: ${path.relative(root, filePath)}`);
     return true;
   } else {
-    logError(`${desc} no encontrado: ${path.relative(root, filePath)}`);
+    logWarn(`${desc} no encontrado: ${path.relative(root, filePath)}`);
     return false;
   }
 };
@@ -102,7 +102,7 @@ if (configFile) {
 // 3️⃣ service worker
 const swPath = path.join(root, "public", "sw.js");
 if (!checkFile(swPath, "Service Worker (sw.js)")) {
-  logWarn("El Service Worker será generado automáticamente por next-pwa durante el build.");
+  logInfo("El Service Worker será generado automáticamente por next-pwa durante el build.");
 }
 
 // 4️⃣ iconos
@@ -119,6 +119,13 @@ if (fs.existsSync(iconDir)) {
   logError("No se encontraron iconos en /public/icons.");
   allGood = false;
 }
+
+// Fallback site
+if (!fs.existsSync(path.join(root, "src/app/offline.tsx"))) {
+  logWarn("No se encontró src/app/offline.tsx — se recomienda añadir un fallback React offline.");
+  allGood = false;
+}
+
 
 printFooter(
   allGood,
