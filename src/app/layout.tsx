@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ConnectionStatus from "@/components/ConnectionStatus";
+import React from "react"; // ✅ IMPORTANTE para JSX en algunas configs TS
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,9 +21,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="es">
       <head>
@@ -33,8 +34,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ConnectionStatus />
         {children}
+        <ConnectionStatus /> {/* ✅ Mejor después del contenido para overlay limpio */}
       </body>
     </html>
   );
