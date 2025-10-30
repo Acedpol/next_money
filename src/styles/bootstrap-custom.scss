@@ -1,0 +1,7 @@
+// Sobrescribe colores, fuentes, etc.
+$primary: #2563eb;
+$body-bg: #f9fafb;
+$font-family-base: 'Geist', sans-serif;
+
+// Importa Bootstrap al final
+@import "bootstrap/scss/bootstrap";
