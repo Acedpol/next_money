@@ -6,19 +6,23 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
+    "check-offline": "node check-offline.js",
     "check-react": "node check-react-version.js",
     "check-pwa": "node check-pwa.js",
     "check-node": "node check-node.js",
     "check-sw": "node check-sw.js",
-    "verify": "npm run check-node && npm run check-pwa && npm run check-sw && npm run check-react",
-    "prebuild": "npm run check-pwa && npm run check-react",
+    "verify": "npm run check-node && npm run check-pwa && npm run check-sw && npm run check-offline && npm run check-react",
+    "prebuild": "npm run check-node && npm run check-pwa && npm run check-react",
     "build": "next build",
     "build:turbo": "next build --turbo",
     "build:webpack": "next build --webpack",
-    "postbuild": "node check-sw.js",
+    "postbuild": "npm run check-sw && npm run check-offline",
     "start": "next start",
     "lint": "eslint",
-    "safe-update": "node check-node.js && npx rimraf node_modules package-lock.json && (npm cache clean --force || echo '⚠️  Cache lock ignored') && npm install && npm update && npm audit fix && npm run build"
+    "safe-update": "npm install && npm update && npm audit fix && npm run build && npm run verify",
+    "clean-node": "npx rimraf node_modules package-lock.json && (npm cache clean --force || echo '⚠️  Cache lock ignored') && npm install",
+    "clean-public": "npx rimraf ./public/sw.js ./public/fallback-*.js ./public/workbox-*.js ./public/_next/static/workbox/",
+    "clean": "npm run clean-node && npm run clean-public"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -34,3 +34,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Fichero autogenerados... por IDEs
+.vscode/
+package-lock.json
+public/static/
+public/sw.js
+public/workbox-*.js
+public/precache-manifest.*
+public/service-worker.js
+public/fallback-*.js
