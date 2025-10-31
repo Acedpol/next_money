@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/bootstrap-custom.scss";
-import "./globals.css";
+
+// import "bootstrap/dist/css/bootstrap.min.css";            // Bootstrap core
+// import "bootstrap/dist/js/bootstrap.bundle.min.js";       // Bootstrap JS Bundle
+import "@/styles/bootstrap-custom.scss";                  // Boostrap customizado
+import "animate.css/animate.min.css";                     // Animaciones
+import "@fortawesome/fontawesome-free/css/all.min.css";   // Iconos FontAwesome
+import "./globals.css";                                   // estilos propios
+
 import ConnectionStatus from "@/components/ConnectionStatus";
-import React from "react"; // ✅ IMPORTANTE para JSX en algunas configs TS
+import React from "react"; // IMPORTANTE para JSX en algunas configs TS
+import BootstrapClient from "@/lib/BootstrapClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,14 +24,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Next Money",
-  description: "Gestor financiero PWA construido con Next.js 16 + Turbopack",
+  description: "Next.js 16 + Turbopack + PWA + Bootstrap + Animate.css + FontAwesome + Geist Fonts + TypeScript + SCSS + Vercel",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <head>
@@ -36,6 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <BootstrapClient /> 
         {children}
         <ConnectionStatus /> {/* ✅ Mejor después del contenido para overlay limpio */}
       </body>

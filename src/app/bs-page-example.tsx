@@ -1,10 +1,11 @@
 "use client";
-import { useBootstrap } from "@/lib/bootstrap";
+import BootstrapClient from "@/lib/BootstrapClient";
 
 export default function ExamplePage() {
-  useBootstrap();
 
   return (
+    <>
+    <BootstrapClient />
     <div className="container mt-5">
       <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Abrir Modal
@@ -18,5 +19,6 @@ export default function ExamplePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

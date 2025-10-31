@@ -1,7 +1,60 @@
-// Sobrescribe colores, fuentes, etc.
+// -----------------------------
+// 1) Overrides antes de cargar Bootstrap
+// -----------------------------
 $primary: #2563eb;
-$body-bg: #f9fafb;
-$font-family-base: 'Geist', sans-serif;
+$secondary: #6c757d;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+$light: #f8f9fa;
+$dark: #212529;
 
-// Importa Bootstrap al final
-@import "bootstrap/scss/bootstrap";
+$body-bg: #f9fafb;
+$body-color: #0b0f17;
+$font-family-base: 'Geist', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+// -----------------------------
+// 2) Cargar el bundle principal de Bootstrap con overrides
+// -----------------------------
+@use "../../node_modules/bootstrap/scss/bootstrap.scss" as bootstrap with (
+  $primary: $primary,
+  $secondary: $secondary,
+  $success: $success,
+  $danger: $danger,
+  $warning: $warning,
+  $info: $info,
+  $light: $light,
+  $dark: $dark,
+  $body-bg: $body-bg,
+  $body-color: $body-color,
+  $font-family-base: $font-family-base
+);
+
+// -----------------------------
+// 3) Tus tokens/variables CSS
+// -----------------------------
+:root {
+  --color-primary: #{$primary};
+  --color-bg: #{$body-bg};
+  --color-text: #{$body-color};
+  --radius-base: 0.75rem;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0b0f17;
+  --color-text: #e5e7eb;
+}
+
+// -----------------------------
+// 4) Ejemplos de uso de mixins (prefijo bootstrap.)
+// -----------------------------
+.button-primary {
+  @include bootstrap.button-variant($primary, $primary);
+}
+
+.card-elevated {
+  @include bootstrap.box-shadow(0 .25rem .75rem rgba(0, 0, 0, .1));
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
